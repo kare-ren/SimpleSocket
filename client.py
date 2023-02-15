@@ -15,12 +15,14 @@ def getOutput():
     while True:
         outputBuf.put(clientSocket.recv(1024).decode())
 
-if len(sys.argv) != 2:
-    print("Please specify a port number")
+if len(sys.argv) != 4:
+    print("usage: client.py serverip port channel")
     exit()
 
 serverName = "localhost"
-serverPort = int(sys.argv[1])
+serverIP = int(sys.argv[1])
+serverPort = int(sys.argv[2])
+serverChannel = int(sys.argv[3])
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
 
