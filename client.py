@@ -1,11 +1,40 @@
 from socket import *
+import threading
+import queue
 
-serverName = "servername"
+
+inputBuf = queue.Queue()
+outputBuf = queue.Queue()
+
+def getInput():
+    while True:
+        inputBuf.put(input())
+
+def getOutput():
+    while True:
+        outputBuf.put(clientSocket.recv(1024).decode())
+
+
+serverName = "localhost"
 serverPort = 12000
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
-sentence = raw_input("Input lowercase sentence:")
-clientSocket.send(sentence.encode())
-modifiedSentence = clientSocket.recv(1024)
-print("From Server:", modifiedSentence.decode())
+
+
+print(clientSocket.recv(1024).decode())
+username = input()
+clientSocket.send(username.encode())
+print(clientSocket.recv(1024).decode())
+
+threading.Thread(target=getInput).start()
+threading.Thread(target=getOutput).start()
+
+while True:
+    while(inputBuf.empty() == False):
+        clientSocket.send((inputBuf.get()).encode())
+
+    while(outputBuf.empty() == False):
+        print(outputBuf.get())
+
+
 clientSocket.close()
