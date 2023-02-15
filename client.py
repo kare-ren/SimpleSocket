@@ -1,6 +1,7 @@
 from socket import *
 import threading
 import queue
+import sys
 
 
 inputBuf = queue.Queue()
@@ -14,12 +15,14 @@ def getOutput():
     while True:
         outputBuf.put(clientSocket.recv(1024).decode())
 
+if len(sys.argv) != 2:
+    print("Please specify a port number")
+    exit()
 
 serverName = "localhost"
-serverPort = 12000
+serverPort = int(sys.argv[1])
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
-
 
 print(clientSocket.recv(1024).decode())
 username = input()
