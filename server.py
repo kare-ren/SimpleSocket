@@ -1,10 +1,14 @@
 from socket import *
 import threading
 
-
 def broadcast(message, sender=None):
     for client in clients:
-            client.sendall(message)
+        client.sendall(message)
+
+def listUsers(message, connectionSocket):
+    for value in clients.values():
+        value = value + "\n"
+        connectionSocket.send(value.encode())
 
 def clientConnections(connectionSocket, addr):
     connectionSocket.send("Enter your username:".encode())
@@ -15,10 +19,13 @@ def clientConnections(connectionSocket, addr):
     try:
          while True:
              message = connectionSocket.recv(1024).decode()
+             if message.lower() == "/users":
+                listUsers(message, connectionSocket)   
+             else:    
+                message = (username + ": " + message).encode()
+                print(message.decode())
+                broadcast(message, connectionSocket)
 
-             message = (username + ": " + message).encode()
-             print(message.decode())
-             broadcast(message, connectionSocket)
     except:
         connectionSocket.close()
         del clients[connectionSocket]
@@ -31,6 +38,7 @@ serverSocket.listen(5)
 print("The server is ready to receive")
 
 clients = {}
+
 while True:
     connectionSocket, addr = serverSocket.accept()
     threading.Thread(target=clientConnections, args=(connectionSocket, addr)).start()
