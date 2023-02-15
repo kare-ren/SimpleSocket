@@ -26,12 +26,15 @@ username = input()
 clientSocket.send(username.encode())
 print(clientSocket.recv(1024).decode())
 
-threading.Thread(target=getInput).start()
-threading.Thread(target=getOutput).start()
+threading.Thread(target=getInput, daemon=True).start()
+threading.Thread(target=getOutput, daemon=True).start()
 
 while True:
     while(inputBuf.empty() == False):
-        clientSocket.send((inputBuf.get()).encode())
+        message = inputBuf.get()
+        if(message == "quit"):
+            exit()
+        clientSocket.send(message.encode())
 
     while(outputBuf.empty() == False):
         print(outputBuf.get())
