@@ -1,5 +1,6 @@
 from socket import *
 import threading
+import sys
 
 def broadcast(message, sender=None):
     for client in clients:
@@ -31,7 +32,11 @@ def clientConnections(connectionSocket, addr):
         del clients[connectionSocket]
         broadcast((username + " has left the chat.").encode())
 
-serverPort = 12000
+if len(sys.argv) != 3:
+    print("usage: server.py port channels")
+    exit()
+
+serverPort = int(sys.argv[1])
 serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(5)
