@@ -20,7 +20,12 @@ if len(sys.argv) != 4:
     exit()
 
 serverName = "localhost"
-serverIP = int(sys.argv[1])
+
+try:
+    serverIP = int(sys.argv[1])
+except(ValueError):
+    serverIP = sys.argv[1]
+
 serverPort = int(sys.argv[2])
 serverChannel = (sys.argv[3])
 clientSocket = socket(AF_INET, SOCK_STREAM)
