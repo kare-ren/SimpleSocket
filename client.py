@@ -22,10 +22,10 @@ if len(sys.argv) != 4:
 serverName = "localhost"
 serverIP = int(sys.argv[1])
 serverPort = int(sys.argv[2])
-serverChannel = int(sys.argv[3])
+serverChannel = (sys.argv[3])
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
-
+clientSocket.send(serverChannel.encode())
 print(clientSocket.recv(1024).decode())
 username = input()
 clientSocket.send(username.encode())
