@@ -1,6 +1,7 @@
 from socket import *
 import threading
 import sys
+import os
 
 # Channel class is responsible for running each chat channel
 class Channel:
@@ -38,6 +39,7 @@ class Channel:
         self.clients[connectionSocket] = [username, 0] # clients[socket] = [username, messages_sent_by_user]
         print("Received connection from " + str(connectionSocket) + " with username " + username)
         connectionSocket.send(("Welcome to chat room " + str(self.name) + ": " + username).encode())
+        self.broadcast((username + " has joined the chat.").encode())
         try:
             while True:
                 message = connectionSocket.recv(1024).decode()
@@ -74,6 +76,8 @@ def getInput():
                 print("Total messages in channel: " + str(channel.total))
                 atotal += channel.total
             print("Total messages in all channels: " + str(atotal))
+        elif command.lower() == "quit":
+            os._exit(1)
 
 if len(sys.argv) != 3:
     print("usage: server.py port channels")
@@ -82,7 +86,7 @@ if len(sys.argv) != 3:
 # Initialize all of the channels based on command line input
 channelsList = []
 for i in range (int((sys.argv[2]))):
-    instance = channel(i, {}, 0)
+    instance = Channel(i, {}, 0)
     channelsList.append(instance)
 
 # Initialize server based on command line input

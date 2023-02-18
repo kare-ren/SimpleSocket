@@ -48,12 +48,9 @@ while True:
     while(inputBuf.empty() == False):
         message = inputBuf.get()
         if(message == "quit"):
-            break
+            clientSocket.close()
+            exit()
         clientSocket.send(message.encode())
 
     while(outputBuf.empty() == False):
         print(outputBuf.get())
-
-
-clientSocket.close()
-exit()
