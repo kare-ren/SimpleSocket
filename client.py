@@ -38,7 +38,7 @@ print(clientSocket.recv(1024).decode())
 username = input()
 clientSocket.send(username.encode())
 print(clientSocket.recv(1024).decode())
-
+print("Type 'quit' to close the client.")
 # Start input/output receiving threads
 threading.Thread(target=getInput, daemon=True).start()
 threading.Thread(target=getOutput, daemon=True).start()

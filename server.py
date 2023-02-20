@@ -94,7 +94,7 @@ serverPort = int(sys.argv[1])
 serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(5)
-print("The server is ready to receive")
+print("The server is ready to receive.\nType 'quit' to close the server")
 
 # Start server command thread
 threading.Thread(target=getInput, daemon=True).start()
